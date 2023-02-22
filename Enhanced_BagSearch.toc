@@ -1,0 +1,7 @@
+## Interface: 11200
+## Title: |cffffffff[Enhanced]|cffffcc00 Bag Search
+## Author: luskanek
+## Notes: Adds a searchbox to the backpack that can be used to search your bags.
+## Version: 1.0
+
+main.lua
