@@ -136,7 +136,7 @@ BackpackSearchBox:SetScript("OnEditFocusLost",
 		this:SetTextColor(0.5, 0.5, 0.5, 1)
 
 		if not string.find(this:GetText(), "%w") then 
-			BackpackSearchBox:SetText("Search")
+			this:SetText("Search")
 			for bag = 0, 4 do
 				for slot = 1, GetContainerNumSlots(bag) do
 					local item = _G["ContainerFrame" .. (bag + 1) .. "Item" .. slot]
@@ -150,9 +150,16 @@ BackpackSearchBox:SetScript("OnEditFocusLost",
 	end
 )
 
+BackpackSearchBox:SetScript("OnEnterPressed",
+	function()
+		this:ClearFocus()
+	end
+)
+
 BackpackSearchBoxClearButton:SetScript("OnClick", 
 	function()
 		BackpackSearchBox:SetText("")
+		BackpackSearchBox:SetFocus()
 		BackpackSearchBox:ClearFocus()
 	end
 )
