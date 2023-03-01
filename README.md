@@ -8,7 +8,7 @@ Enhanced is a series of World of Warcraft addons that aim to preserve the look a
 
 ## Bag Search
 
-This addon adds an editbox to the default backpack window that can be used to search all bags for various items using the available filters.
+This addon adds an editbox to the default backpack window that can be used to search the backpack, bags, bank and bank bags for various items using the available filters.
 
 ![Backpack Search Example](/screenshot.png)
 

@@ -68,29 +68,37 @@ BackpackSearchBox:SetScript("OnTextChanged",
 
 		local query = this:GetText()
 		if query and query ~= "Search" then
-			-- quality
+			-- filter: rarity
 			if string.find(string.lower(query), "/r") then
 				query = string.sub(query, 4)
 				mode = 1
 
+			-- filter: type
 			elseif string.find(string.lower(query), "/t") then
 				query = string.sub(query, 4)
 				mode = 2
 			end
 
-			for bag = 0, 4 do
-				local bagSize = GetContainerNumSlots(bag)
-				for slot = 1, bagSize do
-					local item = _G["ContainerFrame" .. (bag + 1) .. "Item" .. ((bagSize - slot) + 1)]
+			local first = 0
+			local last = NUM_BAG_SLOTS
+			if BankFrame:IsVisible() then
+				first = -1
+				last = NUM_BAG_SLOTS + NUM_BANKBAGSLOTS
+			end
+
+			for bag = first, last do
+				local size = GetContainerNumSlots(bag)
+				for slot = 1, size do
+					local item = _G["ContainerFrame" .. (bag + 1) .. "Item" .. ((size - slot) + 1)] or _G["BankFrameItem" .. slot]
+					local texture = _G[item:GetName() .. "IconTexture"]
 					local _, count, _, _, _ = GetContainerItemInfo(bag, slot)
 					if count then
+						item:SetAlpha(0.3)
+						texture:SetDesaturated(1)
+
 						local link = GetContainerItemLink(bag, slot)
 						local _, _, id, _, _, _ = string.find(link, 'item:(%d+):(%d*):(%d*):(%d*)')
 						local _, _, rarity, _, type, _, _, _ = GetItemInfo(tonumber(id))
-
-						local texture = _G[item:GetName() .. "IconTexture"]
-						texture:SetDesaturated(1)
-						item:SetAlpha(0.3)
 
 						if mode == 0 then
 							local name = string.sub(link, string.find(link, "%[") + 1, string.find(link, "%]") - 1)
@@ -137,12 +145,20 @@ BackpackSearchBox:SetScript("OnEditFocusLost",
 
 		if not string.find(this:GetText(), "%w") then 
 			this:SetText("Search")
-			for bag = 0, 4 do
-				for slot = 1, GetContainerNumSlots(bag) do
-					local item = _G["ContainerFrame" .. (bag + 1) .. "Item" .. slot]
-					item:SetAlpha(1)
 
+			local first = 0
+			local last = NUM_BAG_SLOTS
+			if BankFrame:IsVisible() then
+				first = -1
+				last = NUM_BAG_SLOTS + NUM_BANKBAGSLOTS
+			end
+
+			for bag = first, last do
+				for slot = 1, GetContainerNumSlots(bag) do
+					local item = _G["ContainerFrame" .. (bag + 1) .. "Item" .. slot] or _G["BankFrameItem" .. slot]
 					local texture = _G[item:GetName() .. "IconTexture"]
+					
+					item:SetAlpha(1)
 					texture:SetDesaturated(0)
 				end
 			end
